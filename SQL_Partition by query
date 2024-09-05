@@ -1,0 +1,73 @@
+use db_1
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    CustomerName VARCHAR(100),
+    Country VARCHAR(100)
+);
+
+CREATE TABLE Sales (
+    SaleID INT PRIMARY KEY,
+    CustomerID INT,
+    SaleAmount DECIMAL(10, 2),
+    SaleDate DATE,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+-- Customers
+INSERT INTO Customers (CustomerID, CustomerName, Country)
+VALUES 
+(1, 'John Doe', 'USA'),
+(2, 'Jane Smith', 'Canada'),
+(3, 'Akira Yamamoto', 'Japan'),
+(4, 'Maria Garcia', 'Mexico'),
+(5, 'Liu Wei', 'China');
+
+-- Sales
+INSERT INTO Sales (SaleID, CustomerID, SaleAmount, SaleDate)
+VALUES 
+(1, 1, 500.00, '2023-01-15'),
+(2, 1, 200.00, '2023-02-12'),
+(3, 2, 300.00, '2023-03-05'),
+(4, 3, 450.00, '2023-01-20'),
+(5, 4, 700.00, '2023-04-22'),
+(6, 5, 650.00, '2023-05-30'),
+(7, 2, 150.00, '2023-06-10'),
+(8, 1, 100.00, '2023-07-01');
+--Q1
+SELECT CustomerID, 
+       SaleID, 
+       SaleAmount, 
+       SUM(SaleAmount) OVER(PARTITION BY CustomerID) AS TotalSalesPerCustomer
+FROM Sales;
+
+--Q2
+
+SELECT c.CustomerName, 
+       c.Country, 
+       s.SaleAmount, 
+       RANK() OVER(PARTITION BY c.Country ORDER BY s.SaleAmount DESC) AS RankByCountry
+FROM Sales s
+JOIN Customers c ON s.CustomerID = c.CustomerID;
+
+--Q3 
+
+SELECT CustomerID, 
+       SaleID, 
+       SaleAmount, 
+       SUM(SaleAmount) OVER(PARTITION BY CustomerID ORDER BY SaleDate) AS RunningTotal
+FROM Sales;
+
+--Q4
+SELECT CustomerID, 
+       SaleID, 
+       SaleAmount, 
+       AVG(SaleAmount) OVER(PARTITION BY CustomerID) AS AvgSaleAmount
+FROM Sales;
+
+--Q5
+
+SELECT CustomerID, 
+       SaleID, 
+       SaleDate, 
+       ROW_NUMBER() OVER(PARTITION BY CustomerID ORDER BY SaleDate) AS SaleRank
+FROM Sales;
