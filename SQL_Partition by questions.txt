@@ -1,0 +1,11 @@
+Q1.Total Sales per Customer
+
+Write an SQL query to calculate the total sales for each customer using the PARTITION BY function.
+
+Q2. How can you rank customers based on their total sales amount, partitioned by Country?
+
+Q3.Write a query to calculate the running total of sales for each customer using PARTITION BY
+
+Q4. How would you find the average sale amount for each customer using the PARTITION BY function?
+
+Q5.Write a query to assign a row number to each sale made by a customer, partitioned by customer and ordered by sale date.
