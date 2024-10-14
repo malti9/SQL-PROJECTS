@@ -1,0 +1,52 @@
+CREATE TABLE coursemaster(
+    cid INT PRIMARY KEY,              -- Course ID as an integer and primary key
+    coursename VARCHAR(100) NOT NULL, -- Course name, cannot be NULL
+    category CHAR(1) CHECK (category IN ('B', 'M', 'A')), -- Category: B for Basic, M for Medium, A for Advanced
+    fee DECIMAL(10, 2) CHECK (fee >= 0)  -- Fee, small money type, cannot be negative
+);
+INSERT INTO coursemaster (cid, coursename, category, fee) VALUES
+(1, 'Mathematics', 'B', 100.00),
+(2, 'Physics', 'M', 200.50),
+(3, 'Chemistry', 'A', 300.75),
+(4, 'Biology', 'B', 150.00),
+(5, 'Computer Science', 'A', 400.00);
+
+
+CREATE TABLE studentmaster (
+    sid TINYINT PRIMARY KEY,                  -- Student ID as a tiny integer and primary key
+    name VARCHAR(100) NOT NULL,               -- Name of the student, cannot be NULL
+    origin CHAR(1) CHECK (origin IN ('L', 'F')),  -- Origin: 'L' for Local, 'F' for Foreign
+    type CHAR(1) CHECK (type IN ('U')),       -- Type: 'U' for Undergraduate
+    CONSTRAINT chk_origin CHECK (origin IN ('L', 'F')), -- Ensuring valid origin values
+    CONSTRAINT chk_type CHECK (type = 'U')    -- Ensuring only 'U' for Undergraduate
+);
+
+INSERT INTO studentmaster (sid, name, origin, type) VALUES
+(1, 'John Doe', 'L', 'U'),
+(2, 'Jane Smith', 'F', 'U'),
+(3, 'Emily Davis', 'L', 'U'),
+(4, 'Michael Johnson', 'F', 'U'),
+(5, 'David Brown', 'L', 'U');
+
+
+CREATE TABLE enrollmentmaster (
+    cid INT,                                      -- Course ID as an integer (foreign key)
+    sid TINYINT,                                  -- Student ID as a tiny integer (foreign key)
+    doe DATETIME,                                 -- Date of enrollment
+    fwf BIT,                                      -- Flag indicating whether the course is fully paid (1) or not (0)
+    grade CHAR(1) CHECK (grade IN ('A', 'B', 'C')), -- Grade, restricted to 'A', 'B', or 'C'
+    
+    FOREIGN KEY (cid) REFERENCES coursemaster(cid),     -- Foreign key reference to the `school` table's cid
+    FOREIGN KEY (sid) REFERENCES studentmaster(sid) -- Foreign key reference to the `studentmaster` table's sid
+);
+
+INSERT INTO enrollmentmaster (cid, sid, doe, fwf, grade) VALUES
+(1, 1, '2023-09-01 10:00:00', 1, 'A'),
+(2, 2, '2023-09-05 09:30:00', 0, 'B'),
+(3, 3, '2023-09-10 11:00:00', 1, 'A'),
+(4, 4, '2023-09-15 08:45:00', 1, 'C'),
+(5, 5, '2023-09-20 14:30:00', 0, 'B');
+
+
+
+
